@@ -1,0 +1,35 @@
+<!-- templates/client_photos.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0"><i class="bi bi-images"></i> Photos pour Client N°{{ client.numero }} - {{ client.nom }}</h4>
+        <a href="{{ url_for('list_clients') }}" class="btn btn-light btn-sm">
+            <i class="bi bi-arrow-left"></i> Retour
+        </a>
+    </div>
+    <div class="card-body">
+        {% if client.photos %}
+            <div class="row">
+                {% for photo in client.photos %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <img src="{{ url_for('get_photo', photo_id=photo.id) }}" class="card-img-top" alt="{{ photo.photo_filename }}" style="max-height: 300px; object-fit: contain;">
+                            <div class="card-footer text-center">
+                                <a href="{{ url_for('delete_photo', photo_id=photo.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous vraiment supprimer cette photo?');">
+                                    <i class="bi bi-trash"></i> Supprimer
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                Aucune photo disponible pour ce client.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

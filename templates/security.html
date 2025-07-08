@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-danger text-white text-center">
+                <h4><i class="bi bi-shield-lock"></i> Sécurité Requise</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('security_check') }}">
+                    <div class="mb-3">
+                        <label for="secret_key" class="form-label">Entrez la clé de sécurité:</label>
+                        <input type="password" class="form-control" id="secret_key" name="secret_key" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Valider
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

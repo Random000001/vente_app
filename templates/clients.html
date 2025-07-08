@@ -1,0 +1,90 @@
+<!-- templates/clients.html (updated) -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0"><i class="bi bi-people-fill"></i> Liste des Clients</h4>
+        <div>
+            <a href="{{ url_for('index') }}" class="btn btn-light btn-sm me-2">
+                <i class="bi bi-plus-circle"></i> Nouveau
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>N°</th>
+                        <th>Nom</th>
+                        <th>Articles</th>
+                        <th>Prix €</th>
+                        <th>Prix Dinar</th>
+                        <th>Prix Vente</th>
+                        <th>Gain</th>
+                        <th>Avance</th>
+                        <th>Reste</th>
+                        <th>Passation</th>
+                        <th>Livraison</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for client in clients %}
+                    <tr>
+                        <td>{{ client.numero }}</td>
+                        <td>{{ client.nom }}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="popover" 
+                                    title="Articles" data-bs-content="{{ client.articles|replace('\n', '<br>') }}">
+                                {{ client.articles.split('\n')|length }} pièce(s)
+                            </button>
+                            {% if client.photos %}
+                            <a href="{{ url_for('client_photos', client_id=client.id) }}" class="btn btn-sm btn-outline-primary ms-1">
+                                <i class="bi bi-images"></i> ({{ client.photos|length }})
+                            </a>
+                            {% endif %}
+                        </td>
+                        <td>{{ "%.2f"|format(client.prix_euro) }}</td>
+                        <td>{{ "%.2f"|format(client.prix_dinar) }}</td>
+                        <td>{{ "%.2f"|format(client.prix_vente) }}</td>
+                        <td class="{{ 'text-success' if client.gain > 0 else 'text-danger' }}">
+                            {{ "%.2f"|format(client.gain) }}
+                        </td>
+                        <td>{{ "%.2f"|format(client.avance) }}</td>
+                        <td>{{ "%.2f"|format(client.reste_a_payer) }}</td>
+                        <td>{{ client.date_passation.strftime('%d/%m/%Y') }}</td>
+                        <td>{{ client.date_livraison.strftime('%d/%m/%Y') }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ url_for('edit_client', client_id=client.id) }}" class="btn btn-warning">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{{ url_for('delete_client', client_id=client.id) }}" class="btn btn-danger" 
+                                   onclick="return confirm('Voulez-vous vraiment supprimer ce client?');">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="mt-4 p-3 bg-light rounded">
+            <h5>Totaux:</h5>
+            <div class="row">
+                <div class="col-md-3">Total Clients: <strong>{{ totals.count }}</strong></div>
+                <div class="col-md-3">Total €: <strong>{{ "%.2f"|format(totals.total_euro) }}</strong></div>
+                <div class="col-md-3">Total Dinar: <strong>{{ "%.2f"|format(totals.total_dinar) }}</strong></div>
+                <div class="col-md-3">Total Vente: <strong>{{ "%.2f"|format(totals.total_vente) }}</strong></div>
+                <div class="col-md-3">Total Gain: <strong>{{ "%.2f"|format(totals.total_gain) }}</strong></div>
+                <div class="col-md-3">Total Avance: <strong>{{ "%.2f"|format(totals.total_avance) }}</strong></div>
+                <div class="col-md-3">Total Reste: <strong>{{ "%.2f"|format(totals.total_reste) }}</strong></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
